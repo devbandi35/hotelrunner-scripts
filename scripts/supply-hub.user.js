@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Supply Hub
 // @namespace    http://tampermonkey.net/
-// @version      3.3.1
+// @version      3.3.2
 // @description  HotelRunner destek ekibi için merkezi araçlar paneli
 // @author       HotelRunner Destek Ekibi
 // @match        *://*.hotelrunner.com/*
@@ -354,11 +354,20 @@
             this.minimizeIcon.title = 'Supply Hub\'ı Aç';
             document.body.appendChild(this.minimizeIcon);
 
-            // Widget'ı görünür yap
-            setTimeout(() => {
-                this.widget.classList.add('visible');
-            }, 100);
+            // Widget'ı görünür yap (eğer minimize değilse)
+setTimeout(() => {
+    if (!this.isMinimized) {
+        this.widget.classList.add('visible');
+    }
+}, 100);
+                // Minimize durumu varsa uygula
+if (this.isMinimized) {
+    setTimeout(() => {
+        this.minimizeWidget();
+    }, 150);
+}
         }
+
 
         // Event listener'ları ekle
         attachEventListeners() {
@@ -602,6 +611,7 @@
         // Widget'ı geri getir
         restoreWidget() {
             this.widget.classList.remove('minimized');
+            this.widget.classList.add('visible');  // Bu satırı ekleyin
             this.minimizeIcon.classList.remove('visible');
             this.isMinimized = false;
             this.saveState();
