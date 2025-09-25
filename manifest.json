@@ -3,13 +3,13 @@
   "scripts": {
     "supply-hub": {
       "name": "Supply Hub",
-      "version": "3.3.1",
+      "version": "3.3.2",
       "description": "HotelRunner destek ekibi için merkezi araçlar paneli. Mapping, rate management, gallery ve bulk operations araçlarını tek panelde toplar.",
       "file": "supply-hub.user.js",
       "author": "HotelRunner Destek Ekibi",
       "category": "productivity",
       "status": "stable",
-      "lastUpdated": "2024-01-15T10:30:00Z",
+      "lastUpdated": "2025-09-25T12:30:00Z",
       "requirements": [
         "*.hotelrunner.com/*"
       ],
@@ -22,8 +22,8 @@
       ],
       "changelog": [
         {
-          "version": "3.3.0",
-          "date": "2024-01-15",
+          "version": "3.3.2",
+          "date": "2025-09-25",
           "changes": [
             "ÖHS modülü eklendi - fiyat planları görünüm asistanı",
             "Bulk operations panel entegre edildi",
@@ -33,7 +33,7 @@
           ]
         },
         {
-          "version": "3.2.0",
+          "version": "3.2.",
           "date": "2024-01-10",
           "changes": [
             "Gallery tools modülü eklendi",
