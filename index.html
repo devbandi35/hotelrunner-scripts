@@ -335,16 +335,17 @@
             }
             
             getInstallUrl(script) {
-                // GitHub Pages URL'ini otomatik oluştur
-                const baseUrl = window.location.origin + window.location.pathname.replace('/index.html', '').replace('/', '') + '/';
-                return baseUrl + 'scripts/' + script.file;
-            }
+    // GitHub Pages URL'ini otomatik oluştur
+    const baseUrl = window.location.origin + window.location.pathname.replace('/index.html', '') + '/';
+    return baseUrl + 'scripts/' + script.file;
+}
+
             
             getDirectUrl(script) {
-                // GitHub raw URL'ini oluştur
-                const baseUrl = window.location.origin + window.location.pathname.replace('/index.html', '').replace('/', '') + '/';
-                return baseUrl + 'scripts/' + script.file;
-            }
+    // GitHub raw URL'ini oluştur  
+    const baseUrl = window.location.origin + window.location.pathname.replace('/index.html', '') + '/';
+    return baseUrl + 'scripts/' + script.file;
+}
             
             formatDate(dateString) {
                 if (!dateString) return 'Bilinmiyor';
