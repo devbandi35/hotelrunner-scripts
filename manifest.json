@@ -25,24 +25,31 @@
           "version": "3.3.2",
           "date": "2025-09-25",
           "changes": [
+            "Widget restore görünürlük sorunu düzeltildi",
+            "Sayfa geçişlerinde minimize davranışı iyileştirildi",
             "ÖHS modülü eklendi - fiyat planları görünüm asistanı",
             "Bulk operations panel entegre edildi",
-            "Sürükleme performansı iyileştirildi",
-            "Tesisim kategorisi altında Gallery ve Rate Management araçları birleştirildi",
-            "Otomatik plan renklendirme ve sıralama eklendi"
+            "Sürükleme performansı iyileştirildi"
           ]
-        },
-        
+        }
+      ]
+    }
+  },
+  "categories": {
+    "productivity": "Verimlilik Araçları",
+    "debugging": "Hata Ayıklama",
+    "automation": "Otomasyon",
+    "utility": "Yardımcı Araçlar"
+  },
   "stats": {
-    "totalScripts": 3,
-    "activeScripts": 3,
+    "totalScripts": 1,
+    "activeScripts": 1,
     "totalDownloads": 0,
-    "lastUpdateCheck": "2025-09-25T12:30:00Z",
+    "lastUpdateCheck": "2025-09-25T12:30:00Z"
   },
   "info": {
     "organization": "HotelRunner Destek Ekibi",
     "contact": "destek@hotelrunner.com",
-    "repository": "https://github.com/hotelrunner/userscripts",
-    "documentation": "https://github.com/hotelrunner/userscripts/wiki"
+    "repository": "https://github.com/devbandi35/hotelrunner-scripts"
   }
 }
