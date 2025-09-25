@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HotelRunner Scripts - Destek Ekibi</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 30px;
+            background: #f8fafc;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .stat-card {
+            text-align: center;
+            padding: 20px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #0ea5e9;
+            margin-bottom: 5px;
+        }
+        
+        .scripts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+            padding: 30px;
+        }
+        
+        .script-card {
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .script-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        }
+        
+        .script-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .script-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #0ea5e9, #0284c7);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            margin-right: 15px;
+        }
+        
+        .script-title h3 {
+            font-size: 1.3rem;
+            margin-bottom: 5px;
+            color: #1e293b;
+        }
+        
+        .script-version {
+            display: inline-block;
+            background: #10b981;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .script-description {
+            color: #64748b;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        
+        .script-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+            color: #64748b;
+        }
+        
+        .script-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: #0ea5e9;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #0284c7;
+            transform: translateY(-1px);
+        }
+        
+        .btn-secondary {
+            background: #f1f5f9;
+            color: #475569;
+        }
+        
+        .btn-secondary:hover {
+            background: #e2e8f0;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 60px 20px;
+            color: #64748b;
+        }
+        
+        .loading i {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            animation: spin 2s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .error {
+            text-align: center;
+            padding: 40px;
+            color: #ef4444;
+        }
+        
+        .error i {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .scripts-grid {
+                grid-template-columns: 1fr;
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .script-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-code"></i> HotelRunner Scripts</h1>
+            <p>Destek Ekibi UserScript Yönetim Paneli</p>
+        </div>
+        
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-number" id="total-scripts">-</div>
+                <div>Toplam Script</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="active-scripts">-</div>
+                <div>Aktif Script</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="last-update">-</div>
+                <div>Son Güncelleme</div>
+            </div>
+        </div>
+        
+        <div class="scripts-grid" id="scripts-container">
+            <div class="loading">
+                <i class="fas fa-spinner"></i>
+                <p>Scripts yükleniyor...</p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        class ScriptManager {
+            constructor() {
+                this.manifestUrl = './manifest.json';
+                this.scripts = [];
+                this.init();
+            }
+            
+            async init() {
+                try {
+                    await this.loadManifest();
+                    this.renderScripts();
+                    this.updateStats();
+                } catch (error) {
+                    console.error('Failed to load scripts:', error);
+                    this.showError('Script listesi yüklenirken hata oluştu. Lütfen daha sonra tekrar deneyin.');
+                }
+            }
+            
+            async loadManifest() {
+                const response = await fetch(this.manifestUrl);
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                const data = await response.json();
+                this.scripts = Object.entries(data.scripts).map(([id, script]) => ({
+                    id,
+                    ...script
+                }));
+                this.lastUpdated = data.lastUpdated;
+            }
+            
+            renderScripts() {
+                const container = document.getElementById('scripts-container');
+                
+                if (this.scripts.length === 0) {
+                    container.innerHTML = `
+                        <div class="error">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <p>Henüz script eklenmemiş.</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                container.innerHTML = this.scripts.map(script => `
+                    <div class="script-card">
+                        <div class="script-header">
+                            <div class="script-icon">
+                                <i class="${this.getScriptIcon(script.category || 'default')}"></i>
+                            </div>
+                            <div class="script-title">
+                                <h3>${script.name}</h3>
+                                <span class="script-version">v${script.version}</span>
+                            </div>
+                        </div>
+                        
+                        <p class="script-description">${script.description}</p>
+                        
+                        <div class="script-meta">
+                            <span><i class="fas fa-user"></i> ${script.author || 'HotelRunner'}</span>
+                            <span><i class="fas fa-calendar"></i> ${this.formatDate(script.lastUpdated)}</span>
+                        </div>
+                        
+                        <div class="script-actions">
+                            <a href="${this.getInstallUrl(script)}" class="btn btn-primary" target="_blank">
+                                <i class="fas fa-download"></i> Tampermonkey'e Yükle
+                            </a>
+                            <a href="${this.getDirectUrl(script)}" class="btn btn-secondary" target="_blank">
+                                <i class="fas fa-code"></i> Kodu Görüntüle
+                            </a>
+                        </div>
+                    </div>
+                `).join('');
+            }
+            
+            getScriptIcon(category) {
+                const icons = {
+                    productivity: 'fas fa-rocket',
+                    debugging: 'fas fa-bug',
+                    automation: 'fas fa-robot',
+                    default: 'fas fa-code'
+                };
+                return icons[category] || icons.default;
+            }
+            
+            getInstallUrl(script) {
+                // GitHub Pages URL'ini otomatik oluştur
+                const baseUrl = window.location.origin + window.location.pathname.replace('/index.html', '').replace('/', '') + '/';
+                return baseUrl + 'scripts/' + script.file;
+            }
+            
+            getDirectUrl(script) {
+                // GitHub raw URL'ini oluştur
+                const baseUrl = window.location.origin + window.location.pathname.replace('/index.html', '').replace('/', '') + '/';
+                return baseUrl + 'scripts/' + script.file;
+            }
+            
+            formatDate(dateString) {
+                if (!dateString) return 'Bilinmiyor';
+                return new Date(dateString).toLocaleDateString('tr-TR');
+            }
+            
+            updateStats() {
+                document.getElementById('total-scripts').textContent = this.scripts.length;
+                document.getElementById('active-scripts').textContent = this.scripts.filter(s => s.status !== 'deprecated').length;
+                document.getElementById('last-update').textContent = this.formatDate(this.lastUpdated);
+            }
+            
+            showError(message) {
+                document.getElementById('scripts-container').innerHTML = `
+                    <div class="error">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <p>${message}</p>
+                    </div>
+                `;
+            }
+        }
+        
+        // Sayfa yüklendiğinde başlat
+        document.addEventListener('DOMContentLoaded', () => {
+            new ScriptManager();
+        });
+    </script>
+</body>
+</html>
