@@ -1,0 +1,104 @@
+{
+  "lastUpdated": "2024-01-15T10:30:00Z",
+  "scripts": {
+    "supply-hub": {
+      "name": "Supply Hub",
+      "version": "3.3.0",
+      "description": "HotelRunner destek ekibi için merkezi araçlar paneli. Mapping, rate management, gallery ve bulk operations araçlarını tek panelde toplar.",
+      "file": "supply-hub.user.js",
+      "author": "HotelRunner Destek Ekibi",
+      "category": "productivity",
+      "status": "stable",
+      "lastUpdated": "2024-01-15T10:30:00Z",
+      "requirements": [
+        "*.hotelrunner.com/*"
+      ],
+      "features": [
+        "Mapping araçları (Sıralama, Renklendir, Genişlet)",
+        "Bulk Operations (Toplu işlemler)",
+        "Rate Management (Gelişmiş ve basit güncelleme araçları)",
+        "Gallery Tools (Otomatik etiketleme)",
+        "ÖHS Fiyat Planları Yöneticisi"
+      ],
+      "changelog": [
+        {
+          "version": "3.3.0",
+          "date": "2024-01-15",
+          "changes": [
+            "ÖHS modülü eklendi - fiyat planları görünüm asistanı",
+            "Bulk operations panel entegre edildi",
+            "Sürükleme performansı iyileştirildi",
+            "Tesisim kategorisi altında Gallery ve Rate Management araçları birleştirildi",
+            "Otomatik plan renklendirme ve sıralama eklendi"
+          ]
+        },
+        {
+          "version": "3.2.0",
+          "date": "2024-01-10",
+          "changes": [
+            "Gallery tools modülü eklendi",
+            "Advanced settings toplu işlem araçları",
+            "Standard Rate HR güvenlik korumaları"
+          ]
+        }
+      ]
+    },
+    "gallery-tools": {
+      "name": "Gallery Auto Tagger",
+      "version": "2.1.0", 
+      "description": "HotelRunner gallery sayfalarında otomatik fotoğraf etiketleme aracı. Toplu etiketleme işlemlerini otomatikleştirir.",
+      "file": "gallery-tools.user.js",
+      "author": "HotelRunner Destek Ekibi",
+      "category": "automation",
+      "status": "stable",
+      "lastUpdated": "2024-01-10T15:20:00Z",
+      "requirements": [
+        "*.hotelrunner.com/admin/products/*/images*"
+      ],
+      "features": [
+        "Otomatik fotoğraf etiketleme",
+        "Toplu işlem desteği",
+        "Sayfa yenilenmelerinde otomatik devam",
+        "Progress tracking"
+      ]
+    },
+    "bulk-operations": {
+      "name": "Mapping Bulk Operations",
+      "version": "1.8.0",
+      "description": "HotelRunner mapping sayfalarında toplu işlem araçları. Gelişmiş ayarları toplu yönetim, salt okunur işlemleri ve Standard Rate HR kontrolü.",
+      "file": "bulk-operations.user.js",
+      "author": "HotelRunner Destek Ekibi", 
+      "category": "productivity",
+      "status": "stable",
+      "lastUpdated": "2024-01-08T09:15:00Z",
+      "requirements": [
+        "*.hotelrunner.com/admin/sales/channels/*/mapping*"
+      ],
+      "features": [
+        "Gelişmiş ayarları toplu aç/kapat",
+        "Toplu salt okunur işlemleri",
+        "Toplu ek düzenleme",
+        "Standard Rate HR otomatik kontrolü ve düzeltme",
+        "Güvenlik filtreleri"
+      ]
+    }
+  },
+  "categories": {
+    "productivity": "Verimlilik Araçları",
+    "debugging": "Hata Ayıklama", 
+    "automation": "Otomasyon",
+    "utility": "Yardımcı Araçlar"
+  },
+  "stats": {
+    "totalScripts": 3,
+    "activeScripts": 3,
+    "totalDownloads": 0,
+    "lastUpdateCheck": "2024-01-15T10:30:00Z"
+  },
+  "info": {
+    "organization": "HotelRunner Destek Ekibi",
+    "contact": "destek@hotelrunner.com",
+    "repository": "https://github.com/hotelrunner/userscripts",
+    "documentation": "https://github.com/hotelrunner/userscripts/wiki"
+  }
+}
