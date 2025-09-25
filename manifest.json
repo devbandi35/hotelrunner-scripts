@@ -1,9 +1,9 @@
 {
-  "lastUpdated": "2024-01-15T10:30:00Z",
+  "lastUpdated": "2025-09-25T12:30:00Z",
   "scripts": {
     "supply-hub": {
       "name": "Supply Hub",
-      "version": "3.3.0",
+      "version": "3.3.1",
       "description": "HotelRunner destek ekibi için merkezi araçlar paneli. Mapping, rate management, gallery ve bulk operations araçlarını tek panelde toplar.",
       "file": "supply-hub.user.js",
       "author": "HotelRunner Destek Ekibi",
