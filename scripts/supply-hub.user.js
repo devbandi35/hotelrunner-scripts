@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         Supply Hub
+// @name         Supply Hub - Hibrit System
 // @namespace    http://tampermonkey.net/
-// @version      3.3.2
-// @description  HotelRunner destek ekibi için merkezi araçlar paneli
+// @version      3.4.1
+// @description  HotelRunner destek ekibi için hibrit modal sistem ile merkezi araçlar paneli
 // @author       HotelRunner Destek Ekibi
 // @match        *://*.hotelrunner.com/*
 // @grant        GM_setValue
@@ -14,6 +14,9 @@
 
 (function() {
     'use strict';
+
+    // Global Supply Hub instance
+    let supplyHubInstance = null;
 
     // ===== MODÜL SİSTEMİ =====
     class SupplyModule {
@@ -315,6 +318,255 @@
                     color: var(--sh-text-muted);
                     border-radius: 0 0 12px 12px;
                 }
+
+                /* MODAL SYSTEM */
+                .hub-modal-overlay {
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    background: rgba(0, 0, 0, 0.6);
+                    backdrop-filter: blur(4px);
+                    z-index: 10001;
+                    display: none;
+                    align-items: center;
+                    justify-content: center;
+                    animation: fadeIn 0.2s ease;
+                }
+
+                .hub-modal-overlay.visible {
+                    display: flex;
+                }
+
+                .hub-mini-modal {
+                    background: white;
+                    border-radius: 16px;
+                    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+                    max-width: 500px;
+                    width: 90vw;
+                    max-height: 80vh;
+                    overflow: hidden;
+                    transform: scale(0.95);
+                    transition: all 0.2s ease;
+                }
+
+                .hub-modal-overlay.visible .hub-mini-modal {
+                    transform: scale(1);
+                }
+
+                .hub-modal-header {
+                    background: linear-gradient(135deg, var(--sh-primary) 0%, var(--sh-primary-dark) 100%);
+                    color: white;
+                    padding: 20px 24px;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                }
+
+                .hub-modal-title {
+                    margin: 0;
+                    font-size: 18px;
+                    font-weight: 700;
+                }
+
+                .hub-modal-close {
+                    background: rgba(255, 255, 255, 0.2);
+                    border: none;
+                    color: white;
+                    width: 32px;
+                    height: 32px;
+                    border-radius: 8px;
+                    cursor: pointer;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 18px;
+                    transition: background 0.2s;
+                }
+
+                .hub-modal-close:hover {
+                    background: rgba(255, 255, 255, 0.3);
+                }
+
+                .hub-modal-body {
+                    padding: 24px;
+                    max-height: 60vh;
+                    overflow-y: auto;
+                }
+
+                .hub-form-group {
+                    margin-bottom: 20px;
+                }
+
+                .hub-form-label {
+                    display: block;
+                    margin-bottom: 8px;
+                    font-weight: 600;
+                    color: var(--sh-text);
+                    font-size: 14px;
+                }
+
+                .hub-form-input {
+                    width: 100%;
+                    padding: 12px 16px;
+                    border: 2px solid #e9ecef;
+                    border-radius: 8px;
+                    font-size: 14px;
+                    transition: all 0.2s;
+                    box-sizing: border-box;
+                }
+
+                .hub-form-input:focus {
+                    outline: none;
+                    border-color: var(--sh-primary);
+                    box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
+                }
+
+                .hub-form-select {
+                    width: 100%;
+                    padding: 12px 16px;
+                    border: 2px solid #e9ecef;
+                    border-radius: 8px;
+                    font-size: 14px;
+                    background: white;
+                    cursor: pointer;
+                    transition: all 0.2s;
+                }
+
+                .hub-form-select:focus {
+                    outline: none;
+                    border-color: var(--sh-primary);
+                    box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
+                }
+
+                .hub-form-row {
+                    display: flex;
+                    gap: 16px;
+                    align-items: end;
+                }
+
+                .hub-form-row .hub-form-group {
+                    flex: 1;
+                    margin-bottom: 0;
+                }
+
+                .hub-form-row .hub-form-group.auto {
+                    flex: none;
+                    min-width: 100px;
+                }
+
+                .hub-checkbox-group {
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    margin-bottom: 16px;
+                }
+
+                .hub-checkbox {
+                    width: 18px;
+                    height: 18px;
+                    accent-color: var(--sh-primary);
+                    cursor: pointer;
+                }
+
+                .hub-checkbox-label {
+                    font-size: 14px;
+                    cursor: pointer;
+                    user-select: none;
+                }
+
+                .hub-modal-actions {
+                    padding: 20px 24px;
+                    border-top: 1px solid #e9ecef;
+                    background: #f8f9fa;
+                    display: flex;
+                    justify-content: flex-end;
+                    gap: 12px;
+                }
+
+                .hub-btn {
+                    padding: 10px 20px;
+                    border: none;
+                    border-radius: 8px;
+                    font-weight: 600;
+                    cursor: pointer;
+                    transition: all 0.2s;
+                    font-size: 14px;
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 8px;
+                }
+
+                .hub-btn-secondary {
+                    background: #f1f5f9;
+                    color: #475569;
+                    border: 2px solid #e2e8f0;
+                }
+
+                .hub-btn-secondary:hover {
+                    background: #e2e8f0;
+                    border-color: #cbd5e1;
+                }
+
+                .hub-btn-primary {
+                    background: var(--sh-primary);
+                    color: white;
+                }
+
+                .hub-btn-primary:hover {
+                    background: var(--sh-primary-dark);
+                    transform: translateY(-1px);
+                }
+
+                .hub-btn-danger {
+                    background: #ef4444;
+                    color: white;
+                }
+
+                .hub-btn-danger:hover {
+                    background: #dc2626;
+                }
+
+                .hub-info-box {
+                    background: #f0f9ff;
+                    border: 1px solid #bae6fd;
+                    border-radius: 8px;
+                    padding: 12px;
+                    margin-bottom: 16px;
+                    font-size: 13px;
+                    color: #0369a1;
+                }
+
+                .hub-warning-box {
+                    background: #fffbeb;
+                    border: 1px solid #fde68a;
+                    border-radius: 8px;
+                    padding: 12px;
+                    margin-bottom: 16px;
+                    font-size: 13px;
+                    color: #92400e;
+                }
+
+                @keyframes fadeIn {
+                    from { opacity: 0; }
+                    to { opacity: 1; }
+                }
+
+                /* Responsive */
+                @media (max-width: 768px) {
+                    .hub-form-row {
+                        flex-direction: column;
+                    }
+
+                    .hub-form-row .hub-form-group.auto {
+                        min-width: auto;
+                    }
+
+                    .hub-modal-actions {
+                        flex-direction: column;
+                    }
+                }
             `;
             document.head.appendChild(style);
         }
@@ -355,19 +607,286 @@
             document.body.appendChild(this.minimizeIcon);
 
             // Widget'ı görünür yap (eğer minimize değilse)
-setTimeout(() => {
-    if (!this.isMinimized) {
-        this.widget.classList.add('visible');
-    }
-}, 100);
-                // Minimize durumu varsa uygula
-if (this.isMinimized) {
-    setTimeout(() => {
-        this.minimizeWidget();
-    }, 150);
-}
+            setTimeout(() => {
+                if (!this.isMinimized) {
+                    this.widget.classList.add('visible');
+                }
+            }, 100);
+
+            // Minimize durumu varsa uygula
+            if (this.isMinimized) {
+                setTimeout(() => {
+                    this.minimizeWidget();
+                }, 150);
+            }
         }
 
+        // Modal sistem fonksiyonları
+        showModal(config) {
+            // Mevcut modal varsa kapat
+            this.closeModal();
+
+            // Modal overlay oluştur
+            const overlay = document.createElement('div');
+            overlay.className = 'hub-modal-overlay';
+            overlay.id = 'hub-modal-overlay';
+
+            // Modal content oluştur
+            const modal = document.createElement('div');
+            modal.className = 'hub-mini-modal';
+
+            modal.innerHTML = `
+                <div class="hub-modal-header">
+                    <h3 class="hub-modal-title">${config.title}</h3>
+                    <button class="hub-modal-close" id="hub-modal-close">×</button>
+                </div>
+                <div class="hub-modal-body" id="hub-modal-body">
+                    ${config.content}
+                </div>
+                <div class="hub-modal-actions" id="hub-modal-actions">
+                    ${config.actions || ''}
+                </div>
+            `;
+
+            overlay.appendChild(modal);
+            document.body.appendChild(overlay);
+
+            // Event listeners
+            document.getElementById('hub-modal-close').addEventListener('click', () => this.closeModal());
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay) this.closeModal();
+            });
+
+            // ESC key handling
+            const escHandler = (e) => {
+                if (e.key === 'Escape') {
+                    this.closeModal();
+                    document.removeEventListener('keydown', escHandler);
+                }
+            };
+            document.addEventListener('keydown', escHandler);
+
+            // Göster
+            setTimeout(() => {
+                overlay.classList.add('visible');
+            }, 10);
+
+            return overlay;
+        }
+
+        closeModal() {
+            const overlay = document.getElementById('hub-modal-overlay');
+            if (overlay) {
+                overlay.classList.remove('visible');
+                setTimeout(() => {
+                    overlay.remove();
+                }, 200);
+            }
+        }
+
+        // Bulk Operations Modal'ları
+        showBulkReadonlyModal() {
+            const modalContent = `
+                <div class="hub-info-box">
+                    <strong>Toplu Salt Okunur İşlemi:</strong> Seçili planları salt okunur olarak işaretler veya işareti kaldırır. Standard Rate HR planları güvenlik nedeniyle atlanır.
+                </div>
+
+                <div class="hub-form-group">
+                    <label class="hub-form-label">Filtre Metni (opsiyonel)</label>
+                    <input type="text" class="hub-form-input" id="readonly-filter" placeholder="Örn: Non-refundable">
+                    <small style="color: #666; font-size: 12px; margin-top: 4px; display: block;">
+                        Boş bırakırsanız tüm planlar işlenir. Büyük/küçük harf duyarlı değildir.
+                    </small>
+                </div>
+
+                <div class="hub-form-group">
+                    <label class="hub-form-label">İşlem Türü</label>
+                    <div style="display: flex; gap: 16px;">
+                        <div class="hub-checkbox-group">
+                            <input type="radio" id="readonly-add" name="readonly-action" value="add" checked class="hub-checkbox">
+                            <label for="readonly-add" class="hub-checkbox-label">Salt Okunur Olarak İşaretle</label>
+                        </div>
+                        <div class="hub-checkbox-group">
+                            <input type="radio" id="readonly-remove" name="readonly-action" value="remove" class="hub-checkbox">
+                            <label for="readonly-remove" class="hub-checkbox-label">İşareti Kaldır</label>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            const modalActions = `
+                <button class="hub-btn hub-btn-secondary" id="bulk-readonly-cancel">İptal</button>
+                <button class="hub-btn hub-btn-primary" id="bulk-readonly-apply">Uygula</button>
+            `;
+
+            this.showModal({
+                title: 'Toplu Salt Okunur İşlemi',
+                content: modalContent,
+                actions: modalActions
+            });
+
+            // Event listeners
+            document.getElementById('bulk-readonly-cancel').addEventListener('click', () => this.closeModal());
+            document.getElementById('bulk-readonly-apply').addEventListener('click', () => {
+                const filterText = document.getElementById('readonly-filter').value.trim();
+                const isAdd = document.getElementById('readonly-add').checked;
+
+                this.closeModal();
+                this.executeBulkReadonly(filterText, isAdd);
+            });
+        }
+
+        showBulkAdjustmentModal() {
+            const modalContent = `
+                <div class="hub-info-box">
+                    <strong>Toplu Ek Düzenleme:</strong> Seçili planların ek düzenleme değerlerini toplu olarak ayarlar. Standard Rate HR planları güvenlik nedeniyle atlanır.
+                </div>
+
+                <div class="hub-form-row">
+                    <div class="hub-form-group auto">
+                        <label class="hub-form-label">İşaret</label>
+                        <select class="hub-form-select" id="adj-sign">
+                            <option value="1">+ (Artı)</option>
+                            <option value="-1">- (Eksi)</option>
+                        </select>
+                    </div>
+                    <div class="hub-form-group">
+                        <label class="hub-form-label">Değer</label>
+                        <input type="number" class="hub-form-input" id="adj-value" placeholder="Örn: 10" min="0">
+                    </div>
+                    <div class="hub-form-group auto">
+                        <label class="hub-form-label">Tür</label>
+                        <select class="hub-form-select" id="adj-type">
+                            <option value="flat_rate">€ (Para)</option>
+                            <option value="flat_percent">% (Yüzde)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="hub-form-group">
+                    <label class="hub-form-label">Filtre Metni (opsiyonel)</label>
+                    <input type="text" class="hub-form-input" id="adj-filter" placeholder="Örn: Yarım Pansiyon">
+                    <small style="color: #666; font-size: 12px; margin-top: 4px; display: block;">
+                        Belirli plan adları içeren planları seçmek için kullanın.
+                    </small>
+                </div>
+            `;
+
+            const modalActions = `
+                <button class="hub-btn hub-btn-secondary" id="bulk-adj-cancel">İptal</button>
+                <button class="hub-btn hub-btn-primary" id="bulk-adj-apply">Uygula</button>
+            `;
+
+            this.showModal({
+                title: 'Toplu Ek Düzenleme',
+                content: modalContent,
+                actions: modalActions
+            });
+
+            // Event listeners
+            document.getElementById('bulk-adj-cancel').addEventListener('click', () => this.closeModal());
+            document.getElementById('bulk-adj-apply').addEventListener('click', () => {
+                const sign = document.getElementById('adj-sign').value;
+                const value = document.getElementById('adj-value').value;
+                const type = document.getElementById('adj-type').value;
+                const filter = document.getElementById('adj-filter').value.trim();
+
+                if (!value || isNaN(value) || parseFloat(value) < 0) {
+                    alert('Lütfen geçerli bir değer girin!');
+                    return;
+                }
+
+                this.closeModal();
+                this.executeBulkAdjustment(sign, value, type, filter);
+            });
+        }
+
+        // Bulk operations execution functions
+        executeBulkReadonly(filterText, isAdd) {
+            try {
+                const allItems = Array.from(document.querySelectorAll('.list-item'));
+                if (allItems.length === 0) {
+                    alert("İşlenecek öğe bulunamadı. Bu araç mapping sayfalarında çalışır.");
+                    return;
+                }
+
+                let count = 0, skippedCount = 0;
+                const filteredItems = allItems.filter(item =>
+                    filterText === '' ||
+                    item.querySelector('.five.main-channel')?.textContent.trim().toLowerCase().includes(filterText.toLowerCase())
+                );
+
+                filteredItems.forEach(item => {
+                    const name = item.querySelector('.five.main-channel')?.textContent.trim().toLowerCase() || '';
+                    if (name.includes('standard rate hr')) {
+                        skippedCount++;
+                        return;
+                    }
+                    const checkbox = item.querySelector('.read-only-checkbox');
+                    if (checkbox && checkbox.checked !== isAdd) {
+                        checkbox.click();
+                        count++;
+                    }
+                });
+
+                let message = `${count} plan için "Salt Okunur" durumu ${isAdd ? 'işaretlendi' : 'kaldırıldı'}.`;
+                if (skippedCount > 0) message += `\n${skippedCount} adet "Standard Rate Hr" planı güvenlik nedeniyle atlandı.`;
+                alert(message);
+
+            } catch (error) {
+                console.error('Bulk readonly error:', error);
+                alert(`İşlem sırasında hata: ${error.message}`);
+            }
+        }
+
+        executeBulkAdjustment(sign, value, type, filter) {
+            try {
+                const adjustmentItems = Array.from(document.querySelectorAll('.list-item'));
+                if (adjustmentItems.length === 0) {
+                    alert("İşlenecek öğe bulunamadı. Bu araç mapping sayfalarında çalışır.");
+                    return;
+                }
+
+                let adjCount = 0, adjSkippedCount = 0;
+                const adjFilteredItems = adjustmentItems.filter(item =>
+                    filter === '' ||
+                    item.querySelector('.five.main-channel')?.textContent.trim().toLowerCase().includes(filter.toLowerCase())
+                );
+
+                adjFilteredItems.forEach(item => {
+                    const name = item.querySelector('.five.main-channel')?.textContent.trim().toLowerCase() || '';
+                    if (name.includes('standard rate hr')) {
+                        adjSkippedCount++;
+                        return;
+                    }
+                    const form = item.querySelector('.advanced-settings-container .hr-form-group');
+                    if (form) {
+                        const signSelect = form.querySelector('.field_adjustment_select');
+                        const valueInput = form.querySelector('.consider_data_sign');
+                        const typeSelect = form.querySelector('select[name*="[adjustment_type]"]');
+                        if (signSelect && valueInput && typeSelect) {
+                            signSelect.value = sign;
+                            valueInput.value = value;
+                            typeSelect.value = type;
+                            [signSelect, valueInput, typeSelect].forEach(el =>
+                                el.dispatchEvent(new Event('change', { bubbles: true }))
+                            );
+                            adjCount++;
+                        }
+                    }
+                });
+
+                const typeText = type === 'flat_percent' ? '%' : '€';
+                const signText = sign === '1' ? '+' : '-';
+                let adjMessage = `${adjCount} plana "${signText}${value}${typeText}" ek düzenlemesi uygulandı.`;
+                if (adjSkippedCount > 0) adjMessage += `\n${adjSkippedCount} adet "Standard Rate Hr" planı güvenlik nedeniyle atlandı.`;
+                alert(adjMessage);
+
+            } catch (error) {
+                console.error('Bulk adjustment error:', error);
+                alert(`İşlem sırasında hata: ${error.message}`);
+            }
+        }
 
         // Event listener'ları ekle
         attachEventListeners() {
@@ -411,32 +930,26 @@ if (this.isMinimized) {
                 startLeft = this.widget.offsetLeft;
                 startTop = this.widget.offsetTop;
 
-                // Daha responsive sürükleme için transition'ı kaldır
                 this.widget.style.transition = 'none';
                 header.style.cursor = 'grabbing';
                 document.body.style.userSelect = 'none';
 
-                // Fare capture için
                 header.setPointerCapture?.(e.pointerId);
                 e.preventDefault();
             });
 
-            // mousemove yerine pointermove kullanarak daha keskin response
             document.addEventListener('mousemove', (e) => {
                 if (!isDragging) return;
 
-                // requestAnimationFrame kullanmadan direkt güncelle - daha keskin
                 const newLeft = startLeft + (e.clientX - startX);
                 const newTop = startTop + (e.clientY - startY);
 
-                // Viewport sınırları içinde tut
                 const maxLeft = window.innerWidth - this.widget.offsetWidth;
                 const maxTop = window.innerHeight - this.widget.offsetHeight;
 
                 const clampedLeft = Math.max(0, Math.min(newLeft, maxLeft));
                 const clampedTop = Math.max(0, Math.min(newTop, maxTop));
 
-                // Direkt style update - gecikme yok
                 this.widget.style.left = clampedLeft + 'px';
                 this.widget.style.top = clampedTop + 'px';
             });
@@ -445,19 +958,16 @@ if (this.isMinimized) {
                 if (isDragging) {
                     isDragging = false;
 
-                    // Transition'ı geri ekle
                     this.widget.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
                     header.style.cursor = 'move';
                     document.body.style.userSelect = '';
 
-                    // Pointer capture'ı serbest bırak
                     header.releasePointerCapture?.(e.pointerId);
-
                     this.saveState();
                 }
             });
 
-            // Touch events için de destek ekle
+            // Touch support
             header.addEventListener('touchstart', (e) => {
                 if (e.target.classList.contains('hub-control-btn')) return;
 
@@ -557,12 +1067,10 @@ if (this.isMinimized) {
 
         // Kategori değiştir
         switchCategory(category) {
-            // Tab aktifliği
             document.querySelectorAll('.category-tab').forEach(tab => {
                 tab.classList.toggle('active', tab.dataset.category === category);
             });
 
-            // İçerik aktifliği
             document.querySelectorAll('.module-section').forEach(section => {
                 section.classList.toggle('active', section.dataset.category === category);
             });
@@ -611,7 +1119,7 @@ if (this.isMinimized) {
         // Widget'ı geri getir
         restoreWidget() {
             this.widget.classList.remove('minimized');
-            this.widget.classList.add('visible');  // Bu satırı ekleyin
+            this.widget.classList.add('visible');
             this.minimizeIcon.classList.remove('visible');
             this.isMinimized = false;
             this.saveState();
@@ -658,7 +1166,7 @@ if (this.isMinimized) {
         name: 'Mapping Tools',
         description: 'Oda eşleştirme araçları ve liste yönetimi',
         category: 'Mapping',
-        matchUrls: [], // Tüm HotelRunner sayfalarında aktif
+        matchUrls: [],
         tools: [
             {
                 id: 'sorting',
@@ -697,7 +1205,7 @@ if (this.isMinimized) {
         name: 'Bulk Operations Panel',
         description: 'Acente eşleştirme sayfaları için toplu işlem araçları',
         category: 'Mapping',
-        matchUrls: [], // Tüm HotelRunner sayfalarında aktif
+        matchUrls: [],
         tools: [
             {
                 id: 'toggle-advanced',
@@ -736,7 +1244,7 @@ if (this.isMinimized) {
         name: 'ÖHS - Pricing Plans Manager',
         description: 'Fiyat planları görünüm asistanı - renklendirme, sıralama ve analiz araçları',
         category: 'Tesisim',
-        matchUrls: [], // Tüm HotelRunner sayfalarında aktif
+        matchUrls: [],
         tools: [
             {
                 id: 'load-all-pages',
@@ -768,7 +1276,7 @@ if (this.isMinimized) {
         name: 'Advanced Update Tools',
         description: 'Gelişmiş rate ve availability yönetim araçları',
         category: 'Gelişmiş',
-        matchUrls: [], // Tüm HotelRunner sayfalarında aktif
+        matchUrls: [],
         tools: [
             {
                 id: 'show-price-only',
@@ -800,7 +1308,7 @@ if (this.isMinimized) {
         name: 'Simple Update Tools',
         description: 'Hızlı güncellemeler ve hata ayıklama araçları',
         category: 'Basit',
-        matchUrls: [], // Tüm HotelRunner sayfalarında aktif
+        matchUrls: [],
         tools: [
             {
                 id: 'show-more',
@@ -832,7 +1340,7 @@ if (this.isMinimized) {
         name: 'Gallery Tools',
         description: 'Fotoğraf galerisi için otomatik etiketleme araçları',
         category: 'Tesisim',
-        matchUrls: [], // Tüm HotelRunner sayfalarında aktif
+        matchUrls: [],
         tools: [
             {
                 id: 'auto-tag',
@@ -1051,7 +1559,6 @@ if (this.isMinimized) {
             }
         });
 
-        // Toggle functionality
         const existingInfo = document.querySelector('.occupancy-info');
         if (existingInfo) {
             document.querySelectorAll('.occupancy-info').forEach(el => el.remove());
@@ -1173,7 +1680,6 @@ if (this.isMinimized) {
             }
         }
 
-        // Pagination'ı kaldır
         document.querySelector('.pagination')?.remove();
 
         document.getElementById('hub-status-text').textContent = 'Tüm sayfalar yüklendi. Yeniden taranıyor...';
@@ -1213,26 +1719,24 @@ if (this.isMinimized) {
 
     // Auto-initialize ÖHS features on rate plans pages
     function initializeOHSFeatures() {
-        // Check if we're on a rate plans page
         const tableBody = document.getElementById('table-body');
         const ratePlanGroups = document.querySelectorAll('tbody.rate-plan-row-group');
 
         if (tableBody && ratePlanGroups.length > 0) {
-            // Auto-run the relationship detection and coloring
             setTimeout(() => {
                 tamYenileme();
             }, 1000);
         }
     }
 
-    // ===== GELİŞMİŞ AYARLAR FONKSİYONLARI =====
+    // ===== GELİŞMİŞ AYARLAR FONKSİYONLARI (HİBRİT) =====
     function executeAdvancedSettings(action) {
         try {
             document.getElementById('hub-status-text').textContent = `${action} çalışıyor...`;
 
             switch(action) {
                 case 'toggle-advanced':
-                    // Gelişmiş Ayarları Aç/Kapat
+                    // Basit - prompt kalsın
                     const links = document.querySelectorAll('.advanced-settings a');
                     if (links.length === 0) {
                         alert("Gelişmiş ayarlar bulunamadı. Bu araç mapping sayfalarında çalışır.");
@@ -1250,103 +1754,17 @@ if (this.isMinimized) {
                     break;
 
                 case 'bulk-readonly':
-                    // Toplu Salt Okunur İşlemi
-                    const filterText = prompt("Filtre metni girin (boş bırakırsanız tümü seçilir):", "") || "";
-                    const readOnlyAction = confirm("Salt okunur olarak işaretlemek için 'Tamam', işareti kaldırmak için 'İptal'e tıklayın.");
-
-                    const allItems = Array.from(document.querySelectorAll('.list-item'));
-                    if (allItems.length === 0) {
-                        alert("İşlenecek öğe bulunamadı. Bu araç mapping sayfalarında çalışır.");
-                        return;
-                    }
-
-                    let count = 0, skippedCount = 0;
-                    const filteredItems = allItems.filter(item =>
-                        filterText === '' ||
-                        item.querySelector('.five.main-channel')?.textContent.trim().toLowerCase().includes(filterText.toLowerCase())
-                    );
-
-                    filteredItems.forEach(item => {
-                        const name = item.querySelector('.five.main-channel')?.textContent.trim().toLowerCase() || '';
-                        if (name.includes('standard rate hr')) {
-                            skippedCount++;
-                            return; // GÜVENLİK: Standard Rate Hr planını atla
-                        }
-                        const checkbox = item.querySelector('.read-only-checkbox');
-                        if (checkbox && checkbox.checked !== readOnlyAction) {
-                            checkbox.click();
-                            count++;
-                        }
-                    });
-
-                    let message = `${count} plan için "Salt Okunur" durumu ${readOnlyAction ? 'işaretlendi' : 'kaldırıldı'}.`;
-                    if (skippedCount > 0) message += `\n${skippedCount} adet "Standard Rate Hr" planı güvenlik nedeniyle atlandı.`;
-                    alert(message);
+                    // Modal kullan
+                    supplyHubInstance.showBulkReadonlyModal();
                     break;
 
                 case 'bulk-adjustment':
-                    // Toplu Ek Düzenleme
-                    const adjustmentData = prompt(`Toplu ek düzenleme değerlerini girin:
-Format: +5 veya -10 veya +15% veya -20%
-Örnek: +5 (5 euro ekleme), -10% (10% azaltma)`, "");
-
-                    if (!adjustmentData) return;
-
-                    // Parse adjustment data
-                    const match = adjustmentData.match(/^([+-])(\d+)(%)?$/);
-                    if (!match) {
-                        alert("Geçersiz format! Örnek: +5, -10, +15%, -20%");
-                        return;
-                    }
-
-                    const sign = match[1] === '+' ? '1' : '-1';
-                    const value = match[2];
-                    const type = match[3] ? 'flat_percent' : 'flat_rate';
-
-                    const adjustmentFilter = prompt("Filtre metni girin (boş bırakırsanız tümü seçilir):", "") || "";
-
-                    const adjustmentItems = Array.from(document.querySelectorAll('.list-item'));
-                    if (adjustmentItems.length === 0) {
-                        alert("İşlenecek öğe bulunamadı. Bu araç mapping sayfalarında çalışır.");
-                        return;
-                    }
-
-                    let adjCount = 0, adjSkippedCount = 0;
-                    const adjFilteredItems = adjustmentItems.filter(item =>
-                        adjustmentFilter === '' ||
-                        item.querySelector('.five.main-channel')?.textContent.trim().toLowerCase().includes(adjustmentFilter.toLowerCase())
-                    );
-
-                    adjFilteredItems.forEach(item => {
-                        const name = item.querySelector('.five.main-channel')?.textContent.trim().toLowerCase() || '';
-                        if (name.includes('standard rate hr')) {
-                            adjSkippedCount++;
-                            return; // GÜVENLİK: Standard Rate Hr planını atla
-                        }
-                        const form = item.querySelector('.advanced-settings-container .hr-form-group');
-                        if (form) {
-                            const signSelect = form.querySelector('.field_adjustment_select');
-                            const valueInput = form.querySelector('.consider_data_sign');
-                            const typeSelect = form.querySelector('select[name*="[adjustment_type]"]');
-                            if (signSelect && valueInput && typeSelect) {
-                                signSelect.value = sign;
-                                valueInput.value = value;
-                                typeSelect.value = type;
-                                [signSelect, valueInput, typeSelect].forEach(el =>
-                                    el.dispatchEvent(new Event('change', { bubbles: true }))
-                                );
-                                adjCount++;
-                            }
-                        }
-                    });
-
-                    let adjMessage = `${adjCount} plana "${adjustmentData}" ek düzenlemesi uygulandı.`;
-                    if (adjSkippedCount > 0) adjMessage += `\n${adjSkippedCount} adet "Standard Rate Hr" planı güvenlik nedeniyle atlandı.`;
-                    alert(adjMessage);
+                    // Modal kullan
+                    supplyHubInstance.showBulkAdjustmentModal();
                     break;
 
                 case 'audit-standard-rate':
-                    // Standard Rate HR Kontrol & Düzelt
+                    // Basit - confirm yeterli
                     const srhrItems = Array.from(document.querySelectorAll('.list-item')).filter(item =>
                         item.querySelector('.five.main-channel')?.textContent.trim().toLowerCase().includes('standard rate hr')
                     );
@@ -1364,7 +1782,6 @@ Format: +5 veya -10 veya +15% veya -20%
                         const advancedSettings = item.querySelector('.advanced-settings-container');
                         if (!advancedSettings) return;
 
-                        // Kuralları uygula
                         const adjValueInput = advancedSettings.querySelector('.consider_data_sign');
                         if (adjValueInput && adjValueInput.value !== '0') {
                             adjValueInput.value = '0';
@@ -1391,6 +1808,13 @@ Format: +5 veya -10 veya +15% veya -20%
                         if (masterRateRadio && !masterRateRadio.checked) {
                             masterRateRadio.click();
                         }
+
+                        // YENİ: Oda eşleştirmesini "Gönderme" olarak ayarla
+    const rateValueSelect = item.querySelector('.five select[name*="[rate_value]"]');
+    if (rateValueSelect && rateValueSelect.value !== '-1_-1_false') {
+        rateValueSelect.value = '-1_-1_false';
+        rateValueSelect.dispatchEvent(new Event('change', { bubbles: true }));
+    }
                     });
 
                     alert(`${srhrItems.length} adet "Standard Rate Hr" planı kontrol edildi ve standartlara uygun hale getirildi.`);
@@ -1412,7 +1836,6 @@ Format: +5 veya -10 veya +15% veya -20%
 
             switch(action) {
                 case 'sorting':
-                    // Sıralama fonksiyonu
                     if (typeof $ === 'undefined') {
                         alert('Bu araç için jQuery gereklidir.');
                         return;
@@ -1443,7 +1866,6 @@ Format: +5 veya -10 veya +15% veya -20%
                     break;
 
                 case 'coloring':
-                    // Renklendir fonksiyonu
                     document.querySelectorAll('.list-item.arrow-animation.clearfix').forEach((element, index) => {
                         element.style.backgroundColor = (index % 2 === 0) ? 'white' : '#dddddd';
                     });
@@ -1451,7 +1873,6 @@ Format: +5 veya -10 veya +15% veya -20%
                     break;
 
                 case 'expand':
-                    // Genişlet fonksiyonu
                     document.querySelectorAll('select[name^="store_channel_premium"]').forEach(selectElement => {
                         const currentWidth = parseFloat(getComputedStyle(selectElement).width);
                         if (!isNaN(currentWidth)) {
@@ -1462,7 +1883,6 @@ Format: +5 veya -10 veya +15% veya -20%
                     break;
 
                 case 'filter-rooms':
-                    // Yalnızca Seçili Odalar fonksiyonu
                     if (typeof $ === 'undefined') {
                         alert('Bu araç için jQuery gereklidir.');
                         return;
@@ -1498,7 +1918,6 @@ Format: +5 veya -10 veya +15% veya -20%
                         return;
                     }
 
-                    // Event listener ekle
                     $(document).off('change.supplyHubFilter').on('change.supplyHubFilter', '.mapping-item .mapping-header select.variant_id_select.availability-select', function(event) {
                         filterToShowMatchingRooms(event.target);
                     });
@@ -1525,7 +1944,6 @@ Format: +5 veya -10 veya +15% veya -20%
 
             switch(action) {
                 case 'show-price-only':
-                    // Sadece Fiyatı Göster
                     document.querySelectorAll('tr').forEach(function(row) {
                         if (row.classList.contains('tr_false') && row.classList.contains('smart')) {
                             row.remove();
@@ -1556,7 +1974,6 @@ Format: +5 veya -10 veya +15% veya -20%
                     break;
 
                 case 'show-availability-only':
-                    // Sadece Müsaitlik Göster
                     document.querySelectorAll('.summary .calendar-icon-wrap.icon-align-center').forEach(function(element) {
                         let parentParagraph = element.closest('p');
                         if (parentParagraph) parentParagraph.remove();
@@ -1590,7 +2007,6 @@ Format: +5 veya -10 veya +15% veya -20%
                     break;
 
                 case 'availability-check':
-                    // Müsaitlik Kontrolü
                     document.querySelectorAll('tr.rate_title_row').forEach(function(row) {
                         if (row.querySelector('.supply-availability-checker')) return;
 
@@ -1615,7 +2031,6 @@ Format: +5 veya -10 veya +15% veya -20%
                             event.preventDefault();
                             event.stopPropagation();
 
-                            // Eski sonuçları temizle
                             row.querySelectorAll('span.musaitlik-result').forEach(function(oldResult) {
                                 oldResult.remove();
                             });
@@ -1676,7 +2091,6 @@ Format: +5 veya -10 veya +15% veya -20%
 
             switch(action) {
                 case 'show-more':
-                    // Daha Fazla
                     const links = document.querySelectorAll('a[class^="more_resource_"]');
                     if (links.length === 0) {
                         alert("'Daha Fazla' linki bulunamadı.");
@@ -1687,7 +2101,6 @@ Format: +5 veya -10 veya +15% veya -20%
                     break;
 
                 case 'price-only':
-                    // Yalnızca Fiyat
                     document.querySelectorAll('tr').forEach(function(row) {
                         if (row.classList.contains('tr_false') && row.classList.contains('smart')) {
                             row.remove();
@@ -1726,7 +2139,6 @@ Format: +5 veya -10 veya +15% veya -20%
                     break;
 
                 case 'debug-errors':
-                    // Hata Ayıkla
                     document.querySelectorAll('a[class^="more_resource_"]').forEach(function(link) {
                         link.click();
                     });
@@ -1743,7 +2155,7 @@ Format: +5 veya -10 veya +15% veya -20%
                         alert(`Hata ayıklama tamamlandı. Toplam ${errorCount} adet hatalı hücre bulundu ve işaretlendi.`);
                         document.getElementById('hub-status-text').textContent = 'Hazır';
                     }, 7000);
-                    return; // setTimeout kullandığımız için return
+                    return;
             }
 
             document.getElementById('hub-status-text').textContent = 'Hazır';
@@ -1754,104 +2166,117 @@ Format: +5 veya -10 veya +15% veya -20%
         }
     }
 
-    // ===== GALLERY FONKSİYONLARI =====
-    async function startGalleryTagging() {
-        const tagToAdd = 'gallery';
-
-        const photos = document.querySelectorAll('.item.img-container');
-        if (photos.length === 0) {
-            alert("Etiketlenecek fotoğraf bulunamadı.");
-            return;
-        }
-
-        if (!confirm(`${photos.length} adet fotoğrafa "${tagToAdd}" etiketi eklenecek. Onaylıyor musunuz?`)) {
-            return;
-        }
-
-        // GM functions kullanılabiliyorsa state kaydet
-        if (typeof GM_setValue !== 'undefined') {
-            await GM_setValue('gallery-tagging-active', true);
-            await GM_setValue('gallery-current-index', 0);
-            await GM_setValue('gallery-total-photos', photos.length);
-        }
-
-        alert('Otomatik etiketleme başlatıldı. Sayfa yenilenecek...');
-        location.reload();
+// ===== GALLERY FONKSİYONLARI =====
+async function startGalleryTagging() {
+    const tagToAdd = 'gallery';
+    const photos = document.querySelectorAll('.item.img-container');
+    if (photos.length === 0) {
+        alert("Etiketlenecek fotoğraf bulunamadı.");
+        return;
     }
-
-    async function stopGalleryTagging() {
-        if (typeof GM_deleteValue !== 'undefined') {
-            await GM_deleteValue('gallery-tagging-active');
-            await GM_deleteValue('gallery-current-index');
-            await GM_deleteValue('gallery-total-photos');
-        }
-
-        alert('Etiketleme durduruldu.');
-        location.reload();
+    if (!confirm(`${photos.length} adet fotoğrafa "${tagToAdd}" etiketi eklenecek. Onaylıyor musunuz?`)) {
+        return;
     }
+    if (typeof GM_setValue !== 'undefined') {
+        await GM_setValue('gallery-tagging-active', true);
+        await GM_setValue('gallery-current-index', 0);
+        await GM_setValue('gallery-total-photos', photos.length);
+    }
+    alert('Otomatik etiketleme başlatıldı. Sayfa yenilenecek...');
+    location.reload();
+}
 
-    // Gallery auto-processing (sayfa yüklendiğinde kontrol et)
-    async function handleGalleryAutoProcessing() {
-        if (typeof GM_getValue === 'undefined') return;
+async function stopGalleryTagging() {
+    if (typeof GM_deleteValue !== 'undefined') {
+        await GM_deleteValue('gallery-tagging-active');
+        await GM_deleteValue('gallery-current-index');
+        await GM_deleteValue('gallery-total-photos');
+    }
+    alert('Etiketleme durduruldu.');
+    location.reload();
+}
 
-        const isActive = await GM_getValue('gallery-tagging-active', false);
-        if (!isActive) return;
-
-        const currentIndex = await GM_getValue('gallery-current-index', 0);
-        const totalPhotos = await GM_getValue('gallery-total-photos', 0);
-
-        if (currentIndex >= totalPhotos) {
-            await GM_deleteValue('gallery-tagging-active');
-            alert('Tüm fotoğraflar etiketlendi!');
-            return;
-        }
-
-        // Auto-processing logic buraya gelecek
-        const editButtons = document.querySelectorAll('.item.img-container .icon.edit a');
-        const currentButton = editButtons[currentIndex];
-
-        if (currentButton) {
-            await GM_setValue('gallery-current-index', currentIndex + 1);
-
-            // Modal açma ve etiketleme işlemi
-            currentButton.click();
-
-            setTimeout(async () => {
-                try {
-                    const tagInput = document.querySelector('#defaultModal .tagit-new input');
-                    if (tagInput) {
-                        tagInput.value = 'gallery';
-                        const enterEvent = new KeyboardEvent('keydown', {
-                            key: 'Enter',
-                            code: 'Enter',
-                            keyCode: 13,
-                            bubbles: true
-                        });
-                        tagInput.dispatchEvent(enterEvent);
-
-                        setTimeout(() => {
-                            const saveButton = document.querySelector('#defaultModal input[type="submit"][value="Kaydet"]');
-                            if (saveButton) {
-                                saveButton.click();
-                            }
-                        }, 500);
-                    }
-                } catch (error) {
-                    console.error('Gallery tagging error:', error);
+// Gallery auto-processing (sayfa yüklendiğinde kontrol et)
+async function handleGalleryAutoProcessing() {
+    // Element bulunana kadar bekleyen fonksiyon
+    const waitForElement = (selector, timeout = 10000) => {
+        return new Promise((resolve, reject) => {
+            const interval = setInterval(() => {
+                const element = document.querySelector(selector);
+                if (element) {
+                    clearInterval(interval);
+                    resolve(element);
                 }
-            }, 1000);
-        }
+            }, 100);
+            setTimeout(() => {
+                clearInterval(interval);
+                reject(new Error(`Element "${selector}" bulunamadı.`));
+            }, timeout);
+        });
+    };
+
+    if (typeof GM_getValue === 'undefined') return;
+
+    const isActive = await GM_getValue('gallery-tagging-active', false);
+    if (!isActive) return;
+
+    const currentIndex = await GM_getValue('gallery-current-index', 0);
+    const totalPhotos = await GM_getValue('gallery-total-photos', 0);
+
+    if (currentIndex >= totalPhotos) {
+        await GM_deleteValue('gallery-tagging-active');
+        alert('Tüm fotoğraflar etiketlendi!');
+        return;
     }
+
+    // Auto-processing logic
+    const editButtons = document.querySelectorAll('.item.img-container .icon.edit a');
+    const currentButton = editButtons[currentIndex];
+
+    if (currentButton) {
+        await GM_setValue('gallery-current-index', currentIndex + 1);
+        currentButton.click();
+
+        setTimeout(async () => {
+            try {
+                const tagInput = await waitForElement('#defaultModal .tagit-new input');
+                tagInput.value = 'gallery';
+                const enterEvent = new KeyboardEvent('keydown', {
+                    key: 'Enter',
+                    code: 'Enter',
+                    keyCode: 13,
+                    bubbles: true
+                });
+                tagInput.dispatchEvent(enterEvent);
+
+                await new Promise(r => setTimeout(r, 200));
+                const saveButton = await waitForElement('#defaultModal input[type="submit"][value="Kaydet"]');
+                saveButton.click();
+
+            } catch (error) {
+                console.error('Gallery tagging error:', error);
+                // Hata durumunda işlemi durdur
+                await GM_deleteValue('gallery-tagging-active');
+                await GM_deleteValue('gallery-current-index');
+                await GM_deleteValue('gallery-total-photos');
+            }
+        }, 1000);
+    }
+}
 
     // ===== ANA BAŞLATMA =====
     function initializeSupplyHub() {
         // Supply Hub'ı oluştur
         const hub = new SupplyHub();
 
+        // Global instance olarak kaydet
+        window.supplyHubInstance = hub;
+        supplyHubInstance = hub;
+
         // Modülleri kaydet (öncelik sırasına göre)
-        hub.registerModule(MappingModule);          // En önemli araçlar önce
-        hub.registerModule(AdvancedSettingsModule); // Toplu işlemler ikinci
-        hub.registerModule(PricingPlansModule);     // ÖHS modülü
+        hub.registerModule(MappingModule);
+        hub.registerModule(AdvancedSettingsModule);
+        hub.registerModule(PricingPlansModule);
         hub.registerModule(AdvancedUpdatesModule);
         hub.registerModule(SimpleUpdatesModule);
         hub.registerModule(GalleryModule);
@@ -1865,7 +2290,7 @@ Format: +5 veya -10 veya +15% veya -20%
         // ÖHS özelliklerini otomatik başlat
         initializeOHSFeatures();
 
-        console.log('Supply Hub başlatıldı!');
+        console.log('Supply Hub (Hibrit Modal) başlatıldı!');
     }
 
     // Sayfa yüklendiğinde başlat
@@ -1875,4 +2300,4 @@ Format: +5 veya -10 veya +15% veya -20%
         initializeSupplyHub();
     }
 
-})();
+    })();
