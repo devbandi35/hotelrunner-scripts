@@ -14,22 +14,28 @@
         "*.hotelrunner.com/*"
       ],
       "features": [
-        "Mapping araçları (Sıralama, Renklendir, Genişlet)",
-        "Bulk Operations (Toplu işlemler)",
-        "Rate Management (Gelişmiş ve basit güncelleme araçları)",
-        "Gallery Tools (Otomatik etiketleme)",
-        "ÖHS Fiyat Planları Yöneticisi"
+    "Hibrit Modal Sistem (DOM + Modal UI)",
+    "Mapping araçları (Sıralama, Renklendir, Genişlet, Oda Filtreleme)",
+    "Bulk Operations (Salt Okunur, Ek Düzenleme - Modal Interface)",
+    "Standard Rate HR Audit (Oda Eşleştirme Kontrolü dahil)",
+    "ÖHS Fiyat Planları Yöneticisi (Auto-renklendirme, Kişi farkları)",
+    "Advanced/Simple Rate Management Tools",
+    "Gallery Auto-Tagging (waitForElement optimizasyonu)",
+    "Drag & Drop Widget (Touch support)",
+    "State Management (localStorage persistence)"
       ],
       "changelog": [
         {
           "version": "3.4.1",
           "date": "2025-09-26",
-          "changes": [
-            "Widget restore görünürlük sorunu düzeltildi",
-            "Sayfa geçişlerinde minimize davranışı iyileştirildi",
-            "ÖHS modülü eklendi - fiyat planları görünüm asistanı",
-            "Bulk operations panel entegre edildi",
-            "Sürükleme performansı iyileştirildi"
+        "changes": [
+            "Hibrit modal sistem eklendi - kritik işlemler modal'da",
+            "Standard Rate HR kontrolü oda eşleştirmesi dahil edildi", 
+            "Gallery tagging waitForElement optimizasyonu",
+            "Bulk operations modal interface (Salt Okunur, Ek Düzenleme)",
+            "ÖHS modülü otomatik başlatma eklendi",
+            "Touch support drag functionality",
+            "Validation fix: 0 değeri kabul edilir hale getirildi"
           ]
         }
       ]
