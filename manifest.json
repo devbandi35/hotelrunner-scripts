@@ -3,13 +3,13 @@
   "scripts": {
     "supply-hub": {
       "name": "Supply Hub",
-      "version": "3.3.2",
+      "version": "3.4.1",
       "description": "HotelRunner destek ekibi için merkezi araçlar paneli. Mapping, rate management, gallery ve bulk operations araçlarını tek panelde toplar.",
       "file": "supply-hub.user.js",
       "author": "HotelRunner Destek Ekibi",
       "category": "productivity",
       "status": "stable",
-      "lastUpdated": "2025-09-25T12:30:00Z",
+      "lastUpdated": "2025-09-26T10:10:00Z",
       "requirements": [
         "*.hotelrunner.com/*"
       ],
@@ -22,8 +22,8 @@
       ],
       "changelog": [
         {
-          "version": "3.3.2",
-          "date": "2025-09-25",
+          "version": "3.4.1",
+          "date": "2025-09-26",
           "changes": [
             "Widget restore görünürlük sorunu düzeltildi",
             "Sayfa geçişlerinde minimize davranışı iyileştirildi",
@@ -45,7 +45,7 @@
     "totalScripts": 1,
     "activeScripts": 1,
     "totalDownloads": 0,
-    "lastUpdateCheck": "2025-09-25T12:30:00Z"
+    "lastUpdateCheck": "2025-09-26T12:30:00Z"
   },
   "info": {
     "organization": "HotelRunner Destek Ekibi",
