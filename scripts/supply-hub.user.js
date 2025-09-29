@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Supply Hub - Hibrit System
 // @namespace    http://tampermonkey.net/
-// @version      3.4.1
+// @version      3.4.2
 // @description  HotelRunner destek ekibi için hibrit modal sistem ile merkezi araçlar paneli
 // @author       HotelRunner Destek Ekibi
 // @match        *://*.hotelrunner.com/*
@@ -1247,25 +1247,26 @@
         matchUrls: [],
         tools: [
             {
-                id: 'load-all-pages',
-                name: 'Tüm Sayfaları Yükle',
-                action: function() {
-                    executePricingPlans('load-all-pages');
-                }
-            },
-            {
                 id: 'repaint-plans',
-                name: 'Yeniden Tara ve Sırala',
+                name: 'Tara ve Sırala',
                 action: function() {
                     executePricingPlans('repaint-plans');
                 }
             },
+
             {
                 id: 'show-occupancy',
                 name: 'Kişi Farklarını Göster/Gizle',
                 action: function() {
                     executePricingPlans('show-occupancy');
                 }
+            },
+            {
+                id: 'load-all-pages',
+                name: 'Tüm Sayfaları Yükle',
+                action: function() {
+                    executePricingPlans('load-all-pages');
+                },
             }
         ]
     });
@@ -2287,8 +2288,6 @@ async function handleGalleryAutoProcessing() {
         // Gallery auto-processing kontrolü
         handleGalleryAutoProcessing();
 
-        // ÖHS özelliklerini otomatik başlat
-        initializeOHSFeatures();
 
         console.log('Supply Hub (Hibrit Modal) başlatıldı!');
     }
