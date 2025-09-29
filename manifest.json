@@ -1,15 +1,15 @@
 {
-  "lastUpdated": "2025-09-25T12:30:00Z",
+  "lastUpdated": "2025-09-29T14:15:00Z",
   "scripts": {
     "supply-hub": {
       "name": "Supply Hub",
-      "version": "3.4.1",
+      "version": "3.4.2",
       "description": "HotelRunner destek ekibi için merkezi araçlar paneli. Mapping, rate management, gallery ve bulk operations araçlarını tek panelde toplar.",
       "file": "supply-hub.user.js",
       "author": "HotelRunner Destek Ekibi",
       "category": "productivity",
       "status": "stable",
-      "lastUpdated": "2025-09-26T10:10:00Z",
+      "lastUpdated": "2025-09-29T14:15:00Z",
       "requirements": [
         "*.hotelrunner.com/*"
       ],
@@ -18,7 +18,7 @@
     "Mapping araçları (Sıralama, Renklendir, Genişlet, Oda Filtreleme)",
     "Bulk Operations (Salt Okunur, Ek Düzenleme - Modal Interface)",
     "Standard Rate HR Audit (Oda Eşleştirme Kontrolü dahil)",
-    "ÖHS Fiyat Planları Yöneticisi (Auto-renklendirme, Kişi farkları)",
+    "ÖHS Fiyat Planları Yöneticisi (Renklendirme, Kişi farkları)",
     "Advanced/Simple Rate Management Tools",
     "Gallery Auto-Tagging (waitForElement optimizasyonu)",
     "Drag & Drop Widget (Touch support)",
@@ -26,14 +26,14 @@
       ],
       "changelog": [
         {
-          "version": "3.4.1",
-          "date": "2025-09-26",
+          "version": "3.4.2",
+          "date": "2025-09-29",
         "changes": [
             "Hibrit modal sistem eklendi - kritik işlemler modal'da",
             "Standard Rate HR kontrolü oda eşleştirmesi dahil edildi", 
             "Gallery tagging waitForElement optimizasyonu",
             "Bulk operations modal interface (Salt Okunur, Ek Düzenleme)",
-            "ÖHS modülü otomatik başlatma eklendi",
+            "ÖHS modülü otomatik başlatma kaldırıldı",
             "Touch support drag functionality",
             "Validation fix: 0 değeri kabul edilir hale getirildi"
           ]
@@ -51,7 +51,7 @@
     "totalScripts": 1,
     "activeScripts": 1,
     "totalDownloads": 0,
-    "lastUpdateCheck": "2025-09-26T12:30:00Z"
+    "lastUpdateCheck": "2025-09-29T14:15:00Z"
   },
   "info": {
     "organization": "HotelRunner Destek Ekibi",
